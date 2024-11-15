@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Fraud Awareness Quiz</title>
+    <style>
+        /* Base Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4b79a1, #283e51);
+            color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        /* Quiz Container Styling */
+        .quiz-container {
+            background: #ffffff;
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+        }
+
+        /* Heading Styling */
+        .quiz-container h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #283e51;
+        }
+
+        /* Question Text Styling */
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        /* Options Container Styling */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Option Button Styling */
+        .options-container button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            background-color: #4b79a1;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .options-container button:hover {
+            background-color: #283e51;
+        }
+
+        /* Result Message Styling */
+        .result-message {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        /* Summary Styling */
+        .summary {
+            margin-top: 10px;
+            font-size: 1em;
+            color: #333;
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Media Query for Mobile */
+        @media (max-width: 600px) {
+            .quiz-container {
+                padding: 15px;
+            }
+
+            .quiz-container h2 {
+                font-size: 1.6em;
+            }
+
+            .question {
+                font-size: 1.1em;
+            }
+
+            .options-container button {
+                padding: 10px;
+                font-size: 0.95em;
+            }
+
+            .result-message {
+                font-size: 1.3em;
+            }
+
+            .summary {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h2>Cyber Fraud Awareness Quiz</h2>
+    <div id="quiz">
+        <p class="question" id="question-text"></p>
+        <div class="options-container" id="options"></div>
+        <div class="result-message" id="result-message"></div>
+        <div class="summary" id="summary"></div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { question: "Reporting a cyber crime immediately can improve the chances of recovery.", options: ["Yes, it can", "No, it doesn't matter", "Depends on the crime type", "Only if money was lost"], answer: "Yes, it can" },
+        { question: "Using a public Wi-Fi network is always safe if you don’t enter any passwords.", options: ["Yes, it's safe", "Only if it's a known network", "It's safe if you use VPN", "No, it's still risky"], answer: "No, it's still risky" },
+        { question: "Cyber criminals can access your data if you share your OTP or PIN with them.", options: ["Only if it's a credit card PIN", "Yes, they can", "No, they can't", "Depends on the app security"], answer: "Yes, they can" },
+        { question: "Phishing emails often contain spelling errors or unusual URLs.", options: ["Only in rare cases", "Yes, they often do", "No, they are always perfect", "Sometimes, but not always"], answer: "Yes, they often do" },
+        { question: "All online financial transactions are protected by default, so you don’t need to take extra precautions.", options: ["True", "False", "Only on official websites", "Only on secure networks"], answer: "False" },
+        { question: "Installing antivirus software can help prevent some forms of cyber crime.", options: ["Yes, it can", "No, it's only for viruses", "Only if updated daily", "Only against email threats"], answer: "Yes, it can" },
+        { question: "Posting your personal information on social media has no impact on your cyber security.", options: ["It has no impact", "It can increase risk", "Only if privacy is set", "Only affects financial data"], answer: "It can increase risk" },
+        { question: "Cyber crime cases are always resolved within 24 hours of being reported.", options: ["Yes, always", "Only if a large amount was lost", "No, it may take time", "Only in serious crimes"], answer: "No, it may take time" },
+        { question: "Your mobile device can be at risk of cyber attacks if you download apps from unverified sources.", options: ["Yes, it's risky", "No, all apps are safe", "Only if you enable unknown sources", "Only free apps pose risk"], answer: "Yes, it's risky" },
+        { question: "Cyber criminals often use social engineering tactics to trick people into giving away information.", options: ["Only on phone calls", "Yes, often", "Only in emails", "Rarely used"], answer: "Yes, often" },
+        { question: "Cyber awareness training is unnecessary as long as you’re using a strong password.", options: ["True", "False", "Only for experts", "Only if password is weak"], answer: "False" },
+        { question: "Enabling two-factor authentication (2FA) can enhance your account security.", options: ["No, it makes no difference", "Only for important accounts", "Yes, it adds security", "Only if using a secure network"], answer: "Yes, it adds security" },
+        { question: "Free online quizzes or games asking for personal information could be used for phishing.", options: ["Always safe", "Only reputable quizzes", "Yes, can be used for phishing", "Only if they ask too much"], answer: "Yes, can be used for phishing" }
+    ];
+
+    let currentQuestion = 0;
+    let correctAnswers = 0;
+    let wrongAnswers = 0;
+
+    function loadQuestion() {
+        if (currentQuestion < questions.length) {
+            const questionData = questions[currentQuestion];
+            document.getElementById("question-text").innerText = questionData.question;
+            const optionsDiv = document.getElementById("options");
+            optionsDiv.innerHTML = "";
+
+            questionData.options.forEach(option => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.onclick = () => answer(option);
+                optionsDiv.appendChild(button);
+            });
+
+            document.getElementById("result-message").innerText = "";
+            document.getElementById("summary").innerText = "";
+        } else {
+            showResults();
+        }
+    }
+
+    function answer(selectedOption) {
+        const correctAnswer = questions[currentQuestion].answer;
+        if (selectedOption === correctAnswer) {
+            correctAnswers++;
+        } else {
+            wrongAnswers++;
+        }
+        currentQuestion++;
+        loadQuestion();
+    }
+
+    function showResults() {
+        const quizContainer = document.getElementById("quiz");
+        const resultMessage = document.getElementById("result-message");
+        const summary = document.getElementById("summary");
+
+        quizContainer.innerHTML = "";
+
+        if (correctAnswers >= questions.length * 0.7) {
+            resultMessage.innerText = "Congratulations! You are now an expert in cyber fraud awareness!";
+            resultMessage.style.color = "green";
+        } else {
+            resultMessage.innerText = "Try Again. Keep learning to stay safe!";
+            resultMessage.style.color = "red";
+        }
+
+        summary.innerHTML = `You got ${correctAnswers} correct answers and ${wrongAnswers} wrong answers out of ${questions.length}.`;
+        quizContainer.appendChild(resultMessage);
+        quizContainer.appendChild(summary);
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
